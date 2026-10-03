@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المشتركين</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <h1>إدارة المشتركين</h1>
+            <nav>
+                <a href="/">العروض</a>
+                <a href="/subscribers">المشتركين</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page">
+        <section class="panel">
+            <div class="panel-header">
+                <h2>إضافة مشترك جديد</h2>
+            </div>
+
+            <form method="post" action="/subscribers" class="subscriber-form">
+                <div class="field-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" name="email" required />
+                </div>
+                <div class="field-group">
+                    <label>الدولة المفضلة</label>
+                    <input type="text" name="preferred_country" required placeholder="UAE / Germany / Canada" />
+                </div>
+                <button type="submit">إضافة مشترك</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h2>قائمة المشتركين</h2>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>البريد</th>
+                            <th>الدولة</th>
+                            <th>الحالة</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub in subscribers %}
+                        <tr>
+                            <td>{{ sub.email }}</td>
+                            <td>{{ sub.preferred_country }}</td>
+                            <td>{{ 'نشط' if sub.active else 'غير نشط' }}</td>
+                            <td>
+                                <form method="post" action="/subscribers/{{ sub.id }}/toggle">
+                                    <button type="submit">
+                                        {{ 'إيقاف' if sub.active else 'تفعيل' }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="empty">لا يوجد مشتركين حتى الآن.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

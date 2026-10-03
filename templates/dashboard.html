@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة التحكم - Job Automation</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <h1>Job Automation Dashboard</h1>
+            <nav>
+                <a href="/">العروض</a>
+                <a href="/subscribers">المشتركين</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page">
+        <section class="panel">
+            <div class="panel-header">
+                <h2>العروض الوظيفية</h2>
+                <form method="get" action="/" class="filter-form">
+                    <select name="country">
+                        <option value="">كل الدول</option>
+                        {% for country in countries %}
+                            <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>{{ country }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">تصفية</button>
+                </form>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العنوان</th>
+                            <th>الدولة</th>
+                            <th>التفاصيل</th>
+                            <th>الرابط</th>
+                            <th>حالة الإشعار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td>{{ job.title }}</td>
+                            <td>{{ job.country }}</td>
+                            <td>{{ job.details[:120] ~ '...' if job.details|length > 120 else job.details }}</td>
+                            <td>
+                                {% if job.contact_link %}
+                                    <a href="{{ job.contact_link }}" target="_blank">فتح</a>
+                                {% else %}
+                                    لا يوجد
+                                {% endif %}
+                            </td>
+                            <td>{{ 'مرسل' if job.notified else 'قيد الانتظار' }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty">لا توجد عروض حالياً.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
